@@ -22,7 +22,7 @@ public class GameController {
 
   @PostMapping("/game/create")
   public Game createGame(@RequestParam("name") String name) {
-    Game game = new Game(name, GameConfigCreator.createLevel1());
+    Game game = new Game(name, GameConfigCreator.createLevel2());
     games.put(game.getUuid(), game);
     return game;
   }

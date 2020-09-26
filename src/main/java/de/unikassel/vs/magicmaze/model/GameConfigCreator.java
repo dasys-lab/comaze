@@ -7,4 +7,10 @@ public class GameConfigCreator {
     GameConfig config = new GameConfig(new Int2D(NUM_OF_FIELDS, NUM_OF_FIELDS));
     return config;
   }
+
+  public static GameConfig createLevel2() {
+    GameConfig config = new GameConfig(new Int2D(NUM_OF_FIELDS, NUM_OF_FIELDS));
+    config.addWall(new Int2D(20, 2), Direction.HORIZONTAL);
+    return config;
+  }
 }

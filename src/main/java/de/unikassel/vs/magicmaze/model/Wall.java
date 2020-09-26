@@ -4,7 +4,7 @@ public class Wall {
   private final Int2D position;
   private final Direction direction;
 
-  public Wall(Int2D position, Direction direction){
+  public Wall(Int2D position, Direction direction) {
     this.position = position;
     this.direction = direction;
   }

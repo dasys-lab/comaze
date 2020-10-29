@@ -1,4 +1,4 @@
-package de.unikassel.vs.magicmaze.model;
+package de.unikassel.vs.comaze.model;
 
 public class GameConfigCreator {
   private final static int NUM_OF_FIELDS = 7;

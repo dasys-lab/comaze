@@ -9,10 +9,10 @@
     <relativePath/> <!-- lookup parent from repository -->
   </parent>
   <groupId>de.unikassel.vs</groupId>
-  <artifactId>magicmaze</artifactId>
+  <artifactId>comaze</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <name>Magic Maze Game server</name>
-  <description>Server for a cooperation game inspired by Magic Maze</description>
+  <name>CoMaze Game server</name>
+  <description>Server for a cooperative maze game</description>
 
   <properties>
     <java.version>11</java.version>

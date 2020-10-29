@@ -1,10 +1,10 @@
-package de.unikassel.vs.magicmaze;
+package de.unikassel.vs.comaze;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class MagicMazeGameServerApplicationTests {
+class CoMazeGameServerApplicationTests {
 
 	@Test
 	void contextLoads() {

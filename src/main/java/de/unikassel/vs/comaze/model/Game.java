@@ -1,6 +1,4 @@
-package de.unikassel.vs.magicmaze.model;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
+package de.unikassel.vs.comaze.model;
 
 import java.beans.Transient;
 import java.util.*;

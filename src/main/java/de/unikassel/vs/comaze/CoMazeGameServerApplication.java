@@ -1,13 +1,13 @@
-package de.unikassel.vs.magicmaze;
+package de.unikassel.vs.comaze;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class MagicMazeGameServerApplication {
+public class CoMazeGameServerApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(MagicMazeGameServerApplication.class, args);
+		SpringApplication.run(CoMazeGameServerApplication.class, args);
 	}
 
 }

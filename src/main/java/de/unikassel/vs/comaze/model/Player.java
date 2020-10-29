@@ -1,4 +1,4 @@
-package de.unikassel.vs.magicmaze.model;
+package de.unikassel.vs.comaze.model;
 
 import java.util.HashSet;
 import java.util.Set;

@@ -1,6 +1,6 @@
-package de.unikassel.vs.magicmaze.controller;
+package de.unikassel.vs.comaze.controller;
 
-import de.unikassel.vs.magicmaze.model.*;
+import de.unikassel.vs.comaze.model.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

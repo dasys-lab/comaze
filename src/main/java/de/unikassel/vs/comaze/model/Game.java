@@ -54,6 +54,13 @@ public class Game {
     return initialMaxMoves + getBonusMoves();
   }
 
+  public Integer getMovesLeft() {
+    if (getConfig().getInitialMaxMoves() == null) {
+      return null;
+    }
+    return getMaxMoves() - getUsedMoves();
+  }
+
   public boolean getMayStillMove() {
     Integer maxMoves = getMaxMoves();
     if (maxMoves == null) {
@@ -66,6 +73,14 @@ public class Game {
     int goals = getConfig().getGoals().size();
     int reachedGoals = getReachedGoals().size();
     return reachedGoals >= goals;
+  }
+
+  public boolean getGameLost() {
+    return !getGameWon() && !getMayStillMove();
+  }
+
+  public boolean getGameOver() {
+    return getGameWon() || getGameLost();
   }
 
   public void setNextPlayer() {

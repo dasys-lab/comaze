@@ -1,6 +1,7 @@
 package de.unikassel.vs.comaze.controller;
 
 import de.unikassel.vs.comaze.model.*;
+import de.unikassel.vs.comaze.util.MessageResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -61,7 +62,7 @@ public class GameController {
   }
 
   @PostMapping("/game/{gameId}/move")
-  public ResponseEntity<String> move(
+  public ResponseEntity<MessageResponse<Game>> move(
       @PathVariable("gameId") UUID gameId,
       @RequestParam("playerId") UUID playerId,
       @RequestParam("direction") Direction direction
@@ -69,35 +70,35 @@ public class GameController {
     Game game = games.get(gameId);
 
     if (game == null) {
-      return ResponseEntity.badRequest().body("The game does not exist");
+      return ResponseEntity.badRequest().body(new MessageResponse<>("The game does not exist"));
     }
 
     Optional<Player> optPlayer = game.getPlayers().stream().filter(player -> player.getUuid().equals(playerId)).findFirst();
     if (optPlayer.isEmpty()) {
-      return ResponseEntity.badRequest().body("Player does not exist");
+      return ResponseEntity.badRequest().body(new MessageResponse<>("Player does not exist"));
     }
     Player player = optPlayer.get();
 
     if (!game.getCurrentPlayer().equals(player)) {
-      return ResponseEntity.badRequest().body("It is not your turn");
+      return ResponseEntity.badRequest().body(new MessageResponse<>("It is not your turn"));
     }
 
     if (direction != null) { // skip move
       if (!player.getActions().contains(direction)) {
-        return ResponseEntity.badRequest().body("You may not move in that direction");
+        return ResponseEntity.badRequest().body(new MessageResponse<>("You may not move in that direction"));
       }
 
       Int2D newPosition = game.getAgentPosition().plus(direction.getDir());
       if (!newPosition.fitsIn(game.getConfig().getArenaSize())) {
-        return ResponseEntity.badRequest().body("You may not move outside the arena");
+        return ResponseEntity.badRequest().body(new MessageResponse<>("You may not move outside the arena"));
       }
 
       if (game.getConfig().hasWallBetween(game.getAgentPosition(), newPosition)) {
-        return ResponseEntity.badRequest().body("You may not move through walls");
+        return ResponseEntity.badRequest().body(new MessageResponse<>("You may not move through walls"));
       }
 
       if (!game.getMayStillMove()) {
-        return ResponseEntity.badRequest().body("Game over: You have no moves left");
+        return ResponseEntity.badRequest().body(new MessageResponse<>("Game over: You have no moves left"));
       }
 
       game.setAgentPosition(newPosition);
@@ -117,11 +118,11 @@ public class GameController {
     player.setLastAction(direction);
     game.setNextPlayer();
 
-    return ResponseEntity.ok().body("move ok");
+    return ResponseEntity.ok().body(new MessageResponse<>("move ok",game));
   }
 
   @PostMapping("/game/{gameId}/skip")
-  public ResponseEntity<String> skip(
+  public ResponseEntity<MessageResponse<Game>> skip(
       @PathVariable("gameId") UUID gameId,
       @RequestParam("playerId") UUID playerId
   ) {

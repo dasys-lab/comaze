@@ -9,7 +9,7 @@ public class Game {
   private final UUID uuid = UUID.randomUUID();
   private Int2D agentPosition;
   private int usedMoves = 0;
-  private final List<Color> reachedGoals = new ArrayList<>();
+  private final List<Goal> unreachedGoals = new ArrayList<>();
   private final List<Player> players = new ArrayList<>();
   private int currentPlayerIndex = 0;
   private int bonusMoves;
@@ -18,6 +18,7 @@ public class Game {
     this.name = name;
     this.config = config;
     this.agentPosition = config.getAgentStartPosition();
+    this.unreachedGoals.addAll(config.getGoals());
   }
 
   @Transient
@@ -70,9 +71,7 @@ public class Game {
   }
 
   public boolean getGameWon() {
-    int goals = getConfig().getGoals().size();
-    int reachedGoals = getReachedGoals().size();
-    return reachedGoals >= goals;
+    return getUnreachedGoals().isEmpty();
   }
 
   public boolean getGameLost() {
@@ -134,8 +133,8 @@ public class Game {
     return players;
   }
 
-  public List<Color> getReachedGoals() {
-    return reachedGoals;
+  public List<Goal> getUnreachedGoals() {
+    return unreachedGoals;
   }
 
   public int getUsedMoves() {

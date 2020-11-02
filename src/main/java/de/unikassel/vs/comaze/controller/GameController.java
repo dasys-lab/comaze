@@ -108,17 +108,15 @@ public class GameController {
           .filter(goal -> goal.getPosition().equals(newPosition))
           .findAny();
       if (reachedGoal.isPresent()) {
-        List<Color> reachedGoals = game.getReachedGoals();
-        Color reachedGoalColor = reachedGoal.get().getColor();
-        if (!reachedGoals.contains(reachedGoalColor)) {
-          reachedGoals.add(reachedGoalColor);
-        }
+        List<Goal> unreachedGoals = game.getUnreachedGoals();
+        Goal reachedGoal_ = reachedGoal.get();
+        unreachedGoals.remove(reachedGoal_);
       }
     }
     player.setLastAction(direction);
     game.setNextPlayer();
 
-    return ResponseEntity.ok().body(new MessageResponse<>("move ok",game));
+    return ResponseEntity.ok().body(new MessageResponse<>("move ok", game));
   }
 
   @PostMapping("/game/{gameId}/skip")

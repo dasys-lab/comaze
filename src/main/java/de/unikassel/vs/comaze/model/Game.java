@@ -10,6 +10,7 @@ public class Game {
   private Int2D agentPosition;
   private int usedMoves = 0;
   private final List<Goal> unreachedGoals = new ArrayList<>();
+  private final List<BonusTime> unusedBonusTimes = new ArrayList<>();
   private final List<Player> players = new ArrayList<>();
   private int currentPlayerIndex = 0;
   private int bonusMoves;
@@ -19,6 +20,7 @@ public class Game {
     this.config = config;
     this.agentPosition = config.getAgentStartPosition();
     this.unreachedGoals.addAll(config.getGoals());
+    this.unusedBonusTimes.addAll(config.getBonusTimes());
   }
 
   @Transient
@@ -93,6 +95,10 @@ public class Game {
     this.usedMoves++;
   }
 
+  public void addBonusMoves(int amount) {
+    bonusMoves += amount;
+  }
+
   public Player getCurrentPlayer() {
     if (players.isEmpty()) {
       return null;
@@ -135,6 +141,10 @@ public class Game {
 
   public List<Goal> getUnreachedGoals() {
     return unreachedGoals;
+  }
+
+  public List<BonusTime> getUnusedBonusTimes() {
+    return unusedBonusTimes;
   }
 
   public int getUsedMoves() {

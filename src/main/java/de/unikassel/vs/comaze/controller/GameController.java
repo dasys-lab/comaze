@@ -104,14 +104,20 @@ public class GameController {
       game.setAgentPosition(newPosition);
       game.increaseUsedMoves();
 
-      Optional<Goal> reachedGoal = game.getConfig().getGoals().stream()
+      // strike goal if reached
+      game.getUnreachedGoals().stream()
           .filter(goal -> goal.getPosition().equals(newPosition))
-          .findAny();
-      if (reachedGoal.isPresent()) {
-        List<Goal> unreachedGoals = game.getUnreachedGoals();
-        Goal reachedGoal_ = reachedGoal.get();
-        unreachedGoals.remove(reachedGoal_);
-      }
+          .findAny()
+          .ifPresent(goal -> game.getUnreachedGoals().remove(goal));
+
+      // use bonusTime if reached
+      game.getUnusedBonusTimes().stream()
+          .filter(bonusTime -> bonusTime.getPosition().equals(newPosition))
+          .findAny()
+          .ifPresent(bonusTime -> {
+            game.getUnusedBonusTimes().remove(bonusTime);
+            game.addBonusMoves(bonusTime.getAmount());
+          });
     }
     player.setLastAction(direction);
     game.setNextPlayer();

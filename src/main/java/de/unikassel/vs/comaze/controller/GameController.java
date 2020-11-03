@@ -49,7 +49,7 @@ public class GameController {
       throw new IllegalArgumentException("The game does not exist");
     }
 
-    if (game.getFreeActions() < actions) {
+    if (game.getUnassignedActions() < actions) {
       throw new IllegalArgumentException("The game is full or there are not enough actions left to assign");
     }
 
@@ -78,6 +78,10 @@ public class GameController {
       return ResponseEntity.badRequest().body(new MessageResponse<>("Player does not exist"));
     }
     Player player = optPlayer.get();
+
+    if (!game.getState().getStarted()) {
+      return ResponseEntity.badRequest().body(new MessageResponse<>("The game has not started yet because there are not enough players"));
+    }
 
     if (!game.getCurrentPlayer().equals(player)) {
       return ResponseEntity.badRequest().body(new MessageResponse<>("It is not your turn"));

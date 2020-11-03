@@ -5,6 +5,7 @@ import java.util.*;
 
 public class Game {
   private final GameConfig config;
+  private final GameState state;
   private final String name;
   private final UUID uuid = UUID.randomUUID();
   private Int2D agentPosition;
@@ -18,13 +19,14 @@ public class Game {
   public Game(String name, GameConfig config) {
     this.name = name;
     this.config = config;
+    this.state = new GameState(this);
     this.agentPosition = config.getAgentStartPosition();
     this.unreachedGoals.addAll(config.getGoals());
     this.unusedBonusTimes.addAll(config.getBonusTimes());
   }
 
   @Transient
-  public int getFreeActions() {
+  public int getUnassignedActions() {
     return Direction.values().length - getAssignedActions().size();
   }
 
@@ -70,18 +72,6 @@ public class Game {
       return true;
     }
     return getUsedMoves() < maxMoves;
-  }
-
-  public boolean getGameWon() {
-    return getUnreachedGoals().isEmpty();
-  }
-
-  public boolean getGameLost() {
-    return !getGameWon() && !getMayStillMove();
-  }
-
-  public boolean getGameOver() {
-    return getGameWon() || getGameLost();
   }
 
   public void setNextPlayer() {
@@ -149,5 +139,9 @@ public class Game {
 
   public int getUsedMoves() {
     return usedMoves;
+  }
+
+  public GameState getState() {
+    return state;
   }
 }

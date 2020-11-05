@@ -101,6 +101,11 @@ public class Game {
     return bonusMoves;
   }
 
+  @Transient
+  public int getUsedMoves() {
+    return usedMoves;
+  }
+
   public void setBonusMoves(int bonusMoves) {
     this.bonusMoves = bonusMoves;
   }
@@ -135,10 +140,6 @@ public class Game {
 
   public List<BonusTime> getUnusedBonusTimes() {
     return unusedBonusTimes;
-  }
-
-  public int getUsedMoves() {
-    return usedMoves;
   }
 
   public GameState getState() {

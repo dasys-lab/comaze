@@ -29,9 +29,15 @@ public class GameController {
 
   @PostMapping("/game/create")
   public ResponseEntity<?> createGame(
-      @RequestParam(value = "name", required = false) String name
+      @RequestParam(value = "name", required = false) String name,
+      @RequestParam(value = "level", required = false, defaultValue = "3") String level
   ) {
-    Game game = new Game(name, GameConfigCreator.createLevel3());
+    GameConfig config = GameConfigCreator.createLevel(level);
+    if (config == null) {
+      return ResponseEntity.badRequest().body("There is no such level");
+    }
+
+    Game game = new Game(name, config);
     games.put(game.getUuid(), game);
     return ResponseEntity.ok(game);
   }

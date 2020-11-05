@@ -1,10 +1,14 @@
 package de.unikassel.vs.comaze.model;
 
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class GameConfigCreator {
   private final static int NUM_OF_FIELDS = 7;
-  private static final int INITIAL_MAX_MOVES = 30;
+  private final static int INITIAL_MAX_MOVES = 30;
   private final static int AMOUNT_OF_BONUS_MOVES = 20;
-  private int amountOfBonusMoves;
 
   public static GameConfig createLevel1() {
     GameConfig config = new GameConfig(new Int2D(NUM_OF_FIELDS, NUM_OF_FIELDS));
@@ -34,5 +38,22 @@ public class GameConfigCreator {
     config.addBonusTime(new Int2D(3, 0), AMOUNT_OF_BONUS_MOVES);
     config.addBonusTime(new Int2D(3, 6), AMOUNT_OF_BONUS_MOVES);
     return config;
+  }
+
+  public static GameConfig createLevel(String level) {
+    try {
+      return (GameConfig) GameConfigCreator.class.getMethod("createLevel" + level).invoke(null);
+    } catch (Exception e) {
+      return null;
+    }
+  }
+
+  public static List<String> getLevels() {
+    return Arrays.stream(GameConfigCreator.class.getMethods())
+        .map(Method::getName)
+        .filter(method -> method.startsWith("createLevel"))
+        .map(method -> method.replace("createLevel", ""))
+        .filter(method -> !method.isEmpty())
+        .collect(Collectors.toList());
   }
 }

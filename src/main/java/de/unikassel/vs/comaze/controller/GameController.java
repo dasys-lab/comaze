@@ -1,7 +1,6 @@
 package de.unikassel.vs.comaze.controller;
 
 import de.unikassel.vs.comaze.model.*;
-import de.unikassel.vs.comaze.util.MessageResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +17,7 @@ public class GameController {
   }
 
   @GetMapping("/game/{gameId}")
-  public ResponseEntity<Game> getGame(
+  public ResponseEntity<?> getGame(
       @PathVariable("gameId") UUID gameId
   ) {
     if (games.containsKey(gameId)) {
@@ -29,16 +28,16 @@ public class GameController {
   }
 
   @PostMapping("/game/create")
-  public Game createGame(
+  public ResponseEntity<?> createGame(
       @RequestParam(value = "name", required = false) String name
   ) {
     Game game = new Game(name, GameConfigCreator.createLevel3());
     games.put(game.getUuid(), game);
-    return game;
+    return ResponseEntity.ok(game);
   }
 
   @PostMapping("/game/{gameId}/attend")
-  public Player attendGame(
+  public ResponseEntity<?> attendGame(
       @PathVariable("gameId") UUID gameId,
       @RequestParam(value = "playerName") String playerName,
       @RequestParam(value = "actions", required = false, defaultValue = "2") int actions
@@ -46,11 +45,11 @@ public class GameController {
     Game game = games.get(gameId);
 
     if (game == null) {
-      throw new IllegalArgumentException("The game does not exist");
+      return ResponseEntity.badRequest().body("The game does not exist");
     }
 
     if (game.getUnassignedActions() < actions) {
-      throw new IllegalArgumentException("The game is full or there are not enough actions left to assign");
+      return ResponseEntity.badRequest().body("The game is full or there are not enough actions left to assign");
     }
 
     Player player = new Player(playerName);
@@ -58,11 +57,11 @@ public class GameController {
     for (int i = 0; i < actions; i++) {
       player.getActions().add(game.getUnassignedAction());
     }
-    return player;
+    return ResponseEntity.ok(player);
   }
 
   @PostMapping("/game/{gameId}/move")
-  public ResponseEntity<MessageResponse<Game>> move(
+  public ResponseEntity<?> move(
       @PathVariable("gameId") UUID gameId,
       @RequestParam("playerId") UUID playerId,
       @RequestParam("direction") Direction direction
@@ -70,39 +69,39 @@ public class GameController {
     Game game = games.get(gameId);
 
     if (game == null) {
-      return ResponseEntity.badRequest().body(new MessageResponse<>("The game does not exist"));
+      return ResponseEntity.badRequest().body("The game does not exist");
     }
 
     Optional<Player> optPlayer = game.getPlayers().stream().filter(player -> player.getUuid().equals(playerId)).findFirst();
     if (optPlayer.isEmpty()) {
-      return ResponseEntity.badRequest().body(new MessageResponse<>("Player does not exist"));
+      return ResponseEntity.badRequest().body("Player does not exist");
     }
     Player player = optPlayer.get();
 
     if (!game.getState().getStarted()) {
-      return ResponseEntity.badRequest().body(new MessageResponse<>("The game has not started yet because there are not enough players"));
+      return ResponseEntity.badRequest().body("The game has not started yet because there are not enough players");
     }
 
     if (!game.getCurrentPlayer().equals(player)) {
-      return ResponseEntity.badRequest().body(new MessageResponse<>("It is not your turn"));
+      return ResponseEntity.badRequest().body("It is not your turn");
     }
 
-    if (direction != null) { // skip move
+    if (direction != null) { // direction == null => skipping move
       if (!player.getActions().contains(direction)) {
-        return ResponseEntity.badRequest().body(new MessageResponse<>("You may not move in that direction"));
+        return ResponseEntity.badRequest().body("You may not move in that direction");
       }
 
       Int2D newPosition = game.getAgentPosition().plus(direction.getDir());
       if (!newPosition.fitsIn(game.getConfig().getArenaSize())) {
-        return ResponseEntity.badRequest().body(new MessageResponse<>("You may not move outside the arena"));
+        return ResponseEntity.badRequest().body("You may not move outside the arena");
       }
 
       if (game.getConfig().hasWallBetween(game.getAgentPosition(), newPosition)) {
-        return ResponseEntity.badRequest().body(new MessageResponse<>("You may not move through walls"));
+        return ResponseEntity.badRequest().body("You may not move through walls");
       }
 
-      if (!game.getMayStillMove()) {
-        return ResponseEntity.badRequest().body(new MessageResponse<>("Game over: You have no moves left"));
+      if (game.getState().getOver()) {
+        return ResponseEntity.badRequest().body("Game over");
       }
 
       game.setAgentPosition(newPosition);
@@ -126,11 +125,11 @@ public class GameController {
     player.setLastAction(direction);
     game.setNextPlayer();
 
-    return ResponseEntity.ok().body(new MessageResponse<>("move ok", game));
+    return ResponseEntity.ok().body(game);
   }
 
   @PostMapping("/game/{gameId}/skip")
-  public ResponseEntity<MessageResponse<Game>> skip(
+  public ResponseEntity<?> skip(
       @PathVariable("gameId") UUID gameId,
       @RequestParam("playerId") UUID playerId
   ) {

@@ -63,7 +63,16 @@ public class GameController {
     for (int i = 0; i < actions; i++) {
       player.getActions().add(game.getUnassignedAction());
     }
-    return ResponseEntity.ok(player);
+
+    if (game.getConfig().isHasSecretGoalRules()) {
+      PlayerWithSecretGoalRule rulePlayer = new PlayerWithSecretGoalRule(player);
+      SecretGoalRule rule = game.getUnassignedSecretGoalRule();
+      rule.setPlayer(player);
+      rulePlayer.setSecretGoalRule(rule);
+      return ResponseEntity.ok(rulePlayer);
+    } else {
+      return ResponseEntity.ok(player);
+    }
   }
 
   @PostMapping("/game/{gameId}/move")

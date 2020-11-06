@@ -2,6 +2,7 @@ package de.unikassel.vs.comaze.model;
 
 import java.beans.Transient;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Game {
   private final GameConfig config;
@@ -15,6 +16,7 @@ public class Game {
   private final List<Player> players = new ArrayList<>();
   private int currentPlayerIndex = 0;
   private int bonusMoves;
+  private final List<SecretGoalRule> secretGoalRules = new ArrayList<>();
 
   public Game(String name, GameConfig config) {
     this.name = name;
@@ -49,6 +51,51 @@ public class Game {
     }
     Collections.shuffle(directions);
     return directions.get(0);
+  }
+
+  @Transient
+  public SecretGoalRule getUnassignedSecretGoalRule() {
+    if (secretGoalRules.isEmpty()) {
+      // determine order of goals
+      List<Goal> orderedGoals = new ArrayList<>(config.getGoals());
+      Collections.shuffle(orderedGoals);
+
+      // generate all possible goal rules
+      for (int earlierGoalIndex = 0; earlierGoalIndex < orderedGoals.size() - 1; earlierGoalIndex++) {
+        for (int laterGoalIndex = earlierGoalIndex + 1; laterGoalIndex < orderedGoals.size(); laterGoalIndex++) {
+          secretGoalRules.add(new SecretGoalRule(orderedGoals.get(earlierGoalIndex), orderedGoals.get(laterGoalIndex)));
+        }
+      }
+    }
+
+    // find any unassigned rule
+    Collections.shuffle(secretGoalRules);
+    return secretGoalRules.stream()
+        .filter(rule -> rule.getPlayer() == null)
+        .findAny()
+        .orElse(null);
+  }
+
+  @Transient
+  public List<SecretGoalRule> getSecretGoalRules() {
+    return secretGoalRules;
+  }
+
+  @Transient
+  public List<SecretGoalRule> getAssignedSecretGoalRules() {
+    return secretGoalRules.stream()
+        .filter(rule -> rule.getPlayer() != null)
+        .collect(Collectors.toList());
+  }
+
+  @Transient
+  public Optional<SecretGoalRule> isSecretGoalRuleViolated() {
+    return getAssignedSecretGoalRules().stream()
+        .filter(rule ->
+            getUnreachedGoals().contains(rule.getEarlierGoal()) && // earlier goal has _not_ been reached
+                !getUnreachedGoals().contains(rule.getLaterGoal()) // later goal has been reached
+        )
+        .findAny();
   }
 
   public Integer getMaxMoves() {

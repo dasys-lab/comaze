@@ -10,6 +10,7 @@ public class GameConfig {
   private final Set<BonusTime> bonusTimes = new HashSet<>();
   private final Int2D agentStartPosition;
   private Integer initialMaxMoves;
+  private boolean hasSecretGoalRules;
 
   GameConfig(Int2D arenaSize) {
     this(arenaSize, new Int2D(arenaSize.getX() / 2, arenaSize.getY() / 2));
@@ -91,5 +92,13 @@ public class GameConfig {
 
   public void setInitialMaxMoves(Integer initialMaxMoves) {
     this.initialMaxMoves = initialMaxMoves;
+  }
+
+  public boolean isHasSecretGoalRules() {
+    return hasSecretGoalRules;
+  }
+
+  public void setHasSecretGoalRules(boolean hasSecretGoalRules) {
+    this.hasSecretGoalRules = hasSecretGoalRules;
   }
 }

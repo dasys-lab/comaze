@@ -40,6 +40,12 @@ public class GameConfigCreator {
     return config;
   }
 
+  public static GameConfig createLevel4() {
+    GameConfig config = createLevel3();
+    config.setHasSecretGoalRules(true);
+    return config;
+  }
+
   public static GameConfig createLevel(String level) {
     try {
       return (GameConfig) GameConfigCreator.class.getMethod("createLevel" + level).invoke(null);

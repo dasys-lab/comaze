@@ -148,7 +148,6 @@ public class Game {
     return bonusMoves;
   }
 
-  @Transient
   public int getUsedMoves() {
     return usedMoves;
   }

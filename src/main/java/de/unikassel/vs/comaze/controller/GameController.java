@@ -79,7 +79,7 @@ public class GameController {
   public ResponseEntity<?> move(
       @PathVariable("gameId") UUID gameId,
       @RequestParam("playerId") UUID playerId,
-      @RequestParam("direction") Direction direction
+      @RequestParam("direction") String directionStr
   ) {
     Game game = games.get(gameId);
 
@@ -100,6 +100,8 @@ public class GameController {
     if (!game.getCurrentPlayer().equals(player)) {
       return ResponseEntity.badRequest().body("It is not your turn");
     }
+
+    Direction direction = Direction.get(directionStr);
 
     if (direction != null) { // direction == null => skipping move
       if (!player.getActions().contains(direction)) {
@@ -141,13 +143,5 @@ public class GameController {
     game.setNextPlayer();
 
     return ResponseEntity.ok().body(game);
-  }
-
-  @PostMapping("/game/{gameId}/skip")
-  public ResponseEntity<?> skip(
-      @PathVariable("gameId") UUID gameId,
-      @RequestParam("playerId") UUID playerId
-  ) {
-    return move(gameId, playerId, null);
   }
 }

@@ -18,4 +18,12 @@ public enum Direction {
   public Int2D getDir() {
     return dir;
   }
+
+  public static Direction get(String str) {
+    try {
+      return valueOf(str);
+    } catch (IllegalArgumentException e) {
+      return     null;
+    }
+  }
 }

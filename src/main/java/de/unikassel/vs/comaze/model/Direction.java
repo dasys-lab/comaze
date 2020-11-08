@@ -23,7 +23,7 @@ public enum Direction {
     try {
       return valueOf(str);
     } catch (IllegalArgumentException e) {
-      return     null;
+      return null;
     }
   }
 }

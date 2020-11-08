@@ -14,13 +14,15 @@ public class Game {
   private final List<Goal> unreachedGoals = new ArrayList<>();
   private final List<BonusTime> unusedBonusTimes = new ArrayList<>();
   private final List<Player> players = new ArrayList<>();
+  private final int numOfPlayerSlots;
   private int currentPlayerIndex = 0;
   private int bonusMoves;
   private final List<SecretGoalRule> secretGoalRules = new ArrayList<>();
 
-  public Game(String name, GameConfig config) {
+  public Game(String name, GameConfig config, int numOfPlayerSlots) {
     this.name = name;
     this.config = config;
+    this.numOfPlayerSlots = numOfPlayerSlots;
     this.state = new GameState(this);
     this.agentPosition = config.getAgentStartPosition();
     this.unreachedGoals.addAll(config.getGoals());
@@ -42,13 +44,23 @@ public class Game {
   }
 
   @Transient
-  public Direction getUnassignedAction() {
+  public Direction getUnassignedAction(List<Direction> preferredActions) {
     List<Direction> directions = new ArrayList<>(Arrays.asList(Direction.values()));
     Set<Direction> assignedActions = getAssignedActions();
     directions.removeAll(assignedActions);
+
+    // are there ANY directions left?
     if (directions.isEmpty()) {
       return null;
     }
+
+    // are there preferred directions left?
+    for (Direction preferredAction : preferredActions) {
+      if (directions.contains(preferredAction)) {
+        return preferredAction;
+      }
+    }
+
     Collections.shuffle(directions);
     return directions.get(0);
   }
@@ -190,5 +202,9 @@ public class Game {
 
   public GameState getState() {
     return state;
+  }
+
+  public int getNumOfPlayerSlots() {
+    return numOfPlayerSlots;
   }
 }

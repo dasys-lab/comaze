@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin
@@ -30,14 +31,15 @@ public class GameController {
   @PostMapping("/game/create")
   public ResponseEntity<?> createGame(
       @RequestParam(value = "name", required = false) String name,
-      @RequestParam(value = "level", required = false, defaultValue = "3") String level
+      @RequestParam(value = "level", required = false, defaultValue = "3") String level,
+      @RequestParam(value = "numOfPlayerSlots", required = false, defaultValue = "2") int numOfPlayerSlots
   ) {
     GameConfig config = GameConfigCreator.createLevel(level);
     if (config == null) {
       return ResponseEntity.badRequest().body("There is no such level");
     }
 
-    Game game = new Game(name, config);
+    Game game = new Game(name, config, numOfPlayerSlots);
     games.put(game.getUuid(), game);
     return ResponseEntity.ok(game);
   }
@@ -46,7 +48,7 @@ public class GameController {
   public ResponseEntity<?> attendGame(
       @PathVariable("gameId") UUID gameId,
       @RequestParam(value = "playerName") String playerName,
-      @RequestParam(value = "actions", required = false, defaultValue = "2") int actions
+      @RequestParam(value = "preferredActions", required = false, defaultValue = "") String preferredActionsStr
   ) {
     Game game = games.get(gameId);
 
@@ -54,14 +56,24 @@ public class GameController {
       return ResponseEntity.badRequest().body("The game does not exist");
     }
 
-    if (game.getUnassignedActions() < actions) {
-      return ResponseEntity.badRequest().body("The game is full or there are not enough actions left to assign");
+    int unassignedPlayerSlots = game.getNumOfPlayerSlots() - game.getPlayers().size();
+    int unassignedActions = game.getUnassignedActions();
+    int actionsToAssign = unassignedActions / unassignedPlayerSlots;
+
+    if (unassignedActions == 0) {
+      return ResponseEntity.badRequest().body("The game is full");
     }
 
     Player player = new Player(playerName);
     game.getPlayers().add(player);
-    for (int i = 0; i < actions; i++) {
-      player.getActions().add(game.getUnassignedAction());
+
+    List<Direction> preferredActions = Arrays.stream(preferredActionsStr.split(","))
+        .map(Direction::get)
+        .filter(Objects::nonNull)
+        .collect(Collectors.toList());
+
+    for (int i = 0; i < actionsToAssign; i++) {
+      player.getActions().add(game.getUnassignedAction(preferredActions));
     }
 
     if (game.getConfig().isHasSecretGoalRules()) {

@@ -48,7 +48,7 @@ public class GameController {
   public ResponseEntity<?> attendGame(
       @PathVariable("gameId") UUID gameId,
       @RequestParam(value = "playerName") String playerName,
-      @RequestParam(value = "preferredActions", required = false, defaultValue = "") String preferredActionsStr
+      @RequestParam(value = "preferredDirections", required = false, defaultValue = "") String preferredDirectionsStr
   ) {
     Game game = games.get(gameId);
 
@@ -57,23 +57,25 @@ public class GameController {
     }
 
     int unassignedPlayerSlots = game.getNumOfPlayerSlots() - game.getPlayers().size();
-    int unassignedActions = game.getUnassignedActions();
-    int actionsToAssign = unassignedActions / unassignedPlayerSlots;
+    int unassignedDirections = game.getUnassignedDirections();
 
-    if (unassignedActions == 0) {
+    if (unassignedDirections == 0) {
       return ResponseEntity.badRequest().body("The game is full");
     }
+
+    int directionsToAssign = unassignedDirections / unassignedPlayerSlots;
 
     Player player = new Player(playerName);
     game.getPlayers().add(player);
 
-    List<Direction> preferredActions = Arrays.stream(preferredActionsStr.split(","))
+    List<Direction> preferredDirections = Arrays.stream(preferredDirectionsStr.split(","))
+        .filter(str -> !str.isBlank())
         .map(Direction::get)
         .filter(Objects::nonNull)
         .collect(Collectors.toList());
 
-    for (int i = 0; i < actionsToAssign; i++) {
-      player.getActions().add(game.getUnassignedAction(preferredActions));
+    for (int i = 0; i < directionsToAssign; i++) {
+      player.getDirections().add(game.getUnassignedDirection(preferredDirections));
     }
 
     if (game.getConfig().isHasSecretGoalRules()) {
@@ -91,7 +93,7 @@ public class GameController {
   public ResponseEntity<?> move(
       @PathVariable("gameId") UUID gameId,
       @RequestParam("playerId") UUID playerId,
-      @RequestParam("direction") String directionStr
+      @RequestParam("action") String actionStr
   ) {
     Game game = games.get(gameId);
 
@@ -113,10 +115,10 @@ public class GameController {
       return ResponseEntity.badRequest().body("It is not your turn");
     }
 
-    Direction direction = Direction.get(directionStr);
+    Direction direction = Direction.get(actionStr);
 
     if (direction != null) { // direction == null => skipping move
-      if (!player.getActions().contains(direction)) {
+      if (!player.getDirections().contains(direction)) {
         return ResponseEntity.badRequest().body("You may not move in that direction");
       }
 
@@ -151,7 +153,7 @@ public class GameController {
             game.addBonusMoves(bonusTime.getAmount());
           });
     }
-    player.setLastAction(direction);
+    player.setLastAction(direction != null ? direction.name() : Direction.SKIP);
     game.setNextPlayer();
 
     return ResponseEntity.ok().body(game);

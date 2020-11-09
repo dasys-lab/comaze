@@ -8,7 +8,7 @@ public class GameState {
   }
 
   public boolean getStarted() {
-    return game.getUnassignedActions() == 0;
+    return game.getUnassignedDirections() == 0;
   }
 
   public boolean getOver() {

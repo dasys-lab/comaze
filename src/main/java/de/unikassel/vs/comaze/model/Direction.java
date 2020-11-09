@@ -8,6 +8,8 @@ public enum Direction {
   UP(0, -1),
   DOWN(0, 1);
 
+  public static final String SKIP = "SKIP";
+
   private final Int2D dir;
 
   Direction(int dirX, int dirY) {
@@ -20,10 +22,10 @@ public enum Direction {
   }
 
   public static Direction get(String str) {
-    try {
-      return valueOf(str);
-    } catch (IllegalArgumentException e) {
+    if (str.equals(SKIP)) {
       return null;
+    } else {
+      return valueOf(str);
     }
   }
 }

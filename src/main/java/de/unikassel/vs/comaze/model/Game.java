@@ -30,24 +30,24 @@ public class Game {
   }
 
   @Transient
-  public int getUnassignedActions() {
-    return Direction.values().length - getAssignedActions().size();
+  public int getUnassignedDirections() {
+    return Direction.values().length - getAssignedDirections().size();
   }
 
   @Transient
-  public Set<Direction> getAssignedActions() {
-    Set<Direction> assignedActions = new HashSet<>();
+  public Set<Direction> getAssignedDirections() {
+    Set<Direction> assignedDirections = new HashSet<>();
     for (Player player : players) {
-      assignedActions.addAll(player.getActions());
+      assignedDirections.addAll(player.getDirections());
     }
-    return assignedActions;
+    return assignedDirections;
   }
 
   @Transient
-  public Direction getUnassignedAction(List<Direction> preferredActions) {
+  public Direction getUnassignedDirection(List<Direction> preferredDirections) {
     List<Direction> directions = new ArrayList<>(Arrays.asList(Direction.values()));
-    Set<Direction> assignedActions = getAssignedActions();
-    directions.removeAll(assignedActions);
+    Set<Direction> assignedDirections = getAssignedDirections();
+    directions.removeAll(assignedDirections);
 
     // are there ANY directions left?
     if (directions.isEmpty()) {
@@ -55,9 +55,9 @@ public class Game {
     }
 
     // are there preferred directions left?
-    for (Direction preferredAction : preferredActions) {
-      if (directions.contains(preferredAction)) {
-        return preferredAction;
+    for (Direction preferredDirection : preferredDirections) {
+      if (directions.contains(preferredDirection)) {
+        return preferredDirection;
       }
     }
 
@@ -67,6 +67,7 @@ public class Game {
 
   @Transient
   public SecretGoalRule getUnassignedSecretGoalRule() {
+    // lazy initialize secretGoalRules
     if (secretGoalRules.isEmpty()) {
       // determine order of goals
       List<Goal> orderedGoals = new ArrayList<>(config.getGoals());

@@ -1,7 +1,11 @@
 package de.unikassel.vs.comaze.controller;
 
 import de.unikassel.vs.comaze.model.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -9,8 +13,10 @@ import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin
+@EnableScheduling
 public class GameController {
   Map<UUID, Game> games = new HashMap<>();
+  Logger log = LoggerFactory.getLogger(GameController.class);
 
   @GetMapping("/games")
   public Collection<Game> getGames() {
@@ -40,6 +46,7 @@ public class GameController {
     }
 
     Game game = new Game(name, config, numOfPlayerSlots);
+    game.stayAlive();
     games.put(game.getUuid(), game);
     return ResponseEntity.ok(game);
   }
@@ -55,6 +62,8 @@ public class GameController {
     if (game == null) {
       return ResponseEntity.badRequest().body("The game does not exist");
     }
+
+    game.stayAlive();
 
     int unassignedPlayerSlots = game.getNumOfPlayerSlots() - game.getPlayers().size();
     int unassignedDirections = game.getUnassignedDirections();
@@ -100,6 +109,8 @@ public class GameController {
     if (game == null) {
       return ResponseEntity.badRequest().body("The game does not exist");
     }
+
+    game.stayAlive();
 
     Optional<Player> optPlayer = game.getPlayers().stream().filter(player -> player.getUuid().equals(playerId)).findFirst();
     if (optPlayer.isEmpty()) {
@@ -157,5 +168,18 @@ public class GameController {
     game.setNextPlayer();
 
     return ResponseEntity.ok().body(game);
+  }
+
+  @Scheduled(fixedRate = 60000)
+  public void cleanupGames() {
+    Set<UUID> deadGames = games.keySet().stream()
+        .filter(gameId -> games.get(gameId).mayDie())
+        .collect(Collectors.toSet());
+    deadGames
+        .forEach(gameId -> games.remove(gameId));
+
+    if (!deadGames.isEmpty()) {
+      log.info("Killing " + deadGames.size() + " game(s)");
+    }
   }
 }

@@ -1,6 +1,8 @@
 package de.unikassel.vs.comaze.model;
 
 import java.beans.Transient;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -18,6 +20,9 @@ public class Game {
   private int currentPlayerIndex = 0;
   private int bonusMoves;
   private final List<SecretGoalRule> secretGoalRules = new ArrayList<>();
+
+  private LocalDateTime stayingAliveSince = LocalDateTime.now();
+  private final static Duration TIME_TO_LIVE = Duration.ofMinutes(60);
 
   public Game(String name, GameConfig config, int numOfPlayerSlots) {
     this.name = name;
@@ -207,5 +212,15 @@ public class Game {
 
   public int getNumOfPlayerSlots() {
     return numOfPlayerSlots;
+  }
+
+  public void stayAlive() {
+    this.stayingAliveSince = LocalDateTime.now();
+  }
+
+  @Transient
+  public boolean mayDie() {
+    LocalDateTime deadline = stayingAliveSince.plus(TIME_TO_LIVE);
+    return LocalDateTime.now().isAfter(deadline);
   }
 }

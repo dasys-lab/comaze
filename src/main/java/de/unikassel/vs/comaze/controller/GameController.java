@@ -1,6 +1,12 @@
 package de.unikassel.vs.comaze.controller;
 
 import de.unikassel.vs.comaze.model.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -18,14 +24,27 @@ public class GameController {
   Map<UUID, Game> games = new HashMap<>();
   Logger log = LoggerFactory.getLogger(GameController.class);
 
-  @GetMapping("/games")
-  public Collection<Game> getGames() {
-    return games.values();
-  }
-
+  @Operation(
+      summary = "Get a game",
+      description = "Gets a game object representing its configuration and current state.",
+      responses = {
+          @ApiResponse(
+              responseCode = "200",
+              description = "The matching game object",
+              content = {
+                  @Content(
+                      mediaType = "application/json",
+                      schema = @Schema(implementation = Game.class)
+                  )
+              }
+          )
+      }
+  )
   @GetMapping("/game/{gameId}")
   public ResponseEntity<?> getGame(
-      @PathVariable("gameId") UUID gameId
+      @Parameter(description = "UUID of the game")
+      @PathVariable("gameId")
+          UUID gameId
   ) {
     if (games.containsKey(gameId)) {
       return ResponseEntity.ok(games.get(gameId));
@@ -34,11 +53,35 @@ public class GameController {
     }
   }
 
+  @Operation(
+      summary = "Create a game",
+      description = "Creates a new game and returns the game object.",
+      responses = {
+          @ApiResponse(
+              responseCode = "200",
+              description = "The newly created game object",
+              content = {
+                  @Content(
+                      mediaType = "application/json",
+                      schema = @Schema(implementation = Game.class)
+                  )
+              }
+          )
+      }
+  )
   @PostMapping("/game/create")
   public ResponseEntity<?> createGame(
-      @RequestParam(value = "name", required = false) String name,
-      @RequestParam(value = "level", required = false, defaultValue = "3") String level,
-      @RequestParam(value = "numOfPlayerSlots", required = false, defaultValue = "2") int numOfPlayerSlots
+      @Parameter(description = "A name for the game")
+      @RequestParam(value = "name", required = false)
+          String name,
+
+      @Parameter(description = "The level you want to play")
+      @RequestParam(value = "level", required = false, defaultValue = "3")
+          String level,
+
+      @Parameter(description = "The amount of players needed to play the game")
+      @RequestParam(value = "numOfPlayerSlots", required = false, defaultValue = "2")
+          int numOfPlayerSlots
   ) {
     GameConfig config = GameConfigCreator.createLevel(level);
     if (config == null) {
@@ -51,11 +94,57 @@ public class GameController {
     return ResponseEntity.ok(game);
   }
 
+  @Operation(
+      summary = "Attend a game",
+      description = "Creates a new player and attends the provided game.",
+      responses = {
+          @ApiResponse(
+              responseCode = "200",
+              description = "The newly created player object",
+              content = {
+                  @Content(
+                      mediaType = "application/json",
+                      schema = @Schema(implementation = Player.class)
+                  )
+              }
+          )
+      }
+  )
   @PostMapping("/game/{gameId}/attend")
   public ResponseEntity<?> attendGame(
-      @PathVariable("gameId") UUID gameId,
-      @RequestParam(value = "playerName") String playerName,
-      @RequestParam(value = "preferredDirections", required = false, defaultValue = "") String preferredDirectionsStr
+      @Parameter(description = "The UUID of the game you wish to attend")
+      @PathVariable("gameId")
+          UUID gameId,
+
+      @Parameter(description = "A name that allows other players to identify you")
+      @RequestParam(value = "playerName")
+          String playerName,
+
+      @Parameter(
+          description = "Comma separated list of actions you prefer to play with",
+          examples = {
+              @ExampleObject(
+                  name = "Prefer DOWN",
+                  summary = "Prefer DOWN",
+                  value = "DOWN",
+                  description = "You will be assigned DOWN if available and a random action in a 2-player game."
+              ),
+              @ExampleObject(
+                  name = "Prefer LEFT and RIGHT",
+                  summary = "Prefer LEFT and RIGHT",
+                  value = "LEFT,RIGHT",
+                  description = "You will be assigned LEFT and RIGHT if available."
+              ),
+              @ExampleObject(
+                  name = "No preferred actions",
+                  summary = "No preferred actions",
+                  value = "",
+                  description = "You will be assigned a random set of actions."
+              )
+          }
+      )
+      @RequestParam(value = "preferredDirections", required = false, defaultValue = "")
+          String preferredDirectionsStr
   ) {
     Game game = games.get(gameId);
 
@@ -98,11 +187,51 @@ public class GameController {
     }
   }
 
+  @Operation(
+      summary = "Make a move",
+      description = "Makes the provided player move in the provided game.",
+      responses = {
+          @ApiResponse(
+              responseCode = "200",
+              description = "The updated game object",
+              content = {
+                  @Content(
+                      mediaType = "application/json",
+                      schema = @Schema(implementation = Game.class)
+                  )
+              }
+          )
+      }
+  )
   @PostMapping("/game/{gameId}/move")
   public ResponseEntity<?> move(
-      @PathVariable("gameId") UUID gameId,
-      @RequestParam("playerId") UUID playerId,
-      @RequestParam("action") String actionStr
+      @Parameter(description = "The UUID of the game")
+      @PathVariable("gameId")
+          UUID gameId,
+
+      @Parameter(description = "The UUID of the player")
+      @RequestParam("playerId")
+          UUID playerId,
+
+      @Parameter(
+          description = "The direction you want the player to move or SKIP",
+          examples = {
+              @ExampleObject(
+                  name = "Direction",
+                  summary = "Direction",
+                  value = "DOWN",
+                  description = "You will move down"
+              ),
+              @ExampleObject(
+                  name = "SKIP",
+                  summary = "SKIP",
+                  value = "SKIP",
+                  description = "You will end your turn without moving"
+              )
+          }
+      )
+      @RequestParam("action")
+          String actionStr
   ) {
     Game game = games.get(gameId);
 

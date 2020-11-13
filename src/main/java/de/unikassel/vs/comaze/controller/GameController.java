@@ -91,6 +91,7 @@ public class GameController {
     Game game = new Game(name, config, numOfPlayerSlots);
     game.stayAlive();
     games.put(game.getUuid(), game);
+    log.info("Game created: " + game);
     return ResponseEntity.ok(game);
   }
 
@@ -149,6 +150,7 @@ public class GameController {
     Game game = games.get(gameId);
 
     if (game == null) {
+      log.info(playerName + " attempts to attend a game that does not exist: " + gameId);
       return ResponseEntity.badRequest().body("The game does not exist");
     }
 
@@ -158,6 +160,7 @@ public class GameController {
     int unassignedDirections = game.getUnassignedDirections();
 
     if (unassignedDirections == 0) {
+      log.info(playerName + " attempts to attend a game that is full: " + game);
       return ResponseEntity.badRequest().body("The game is full");
     }
 
@@ -175,6 +178,8 @@ public class GameController {
     for (int i = 0; i < directionsToAssign; i++) {
       player.getDirections().add(game.getUnassignedDirection(preferredDirections));
     }
+
+    log.info(player + " is attending the game: " + game);
 
     if (game.getConfig().isHasSecretGoalRules()) {
       PlayerWithSecretGoalRule rulePlayer = new PlayerWithSecretGoalRule(player);
@@ -236,6 +241,7 @@ public class GameController {
     Game game = games.get(gameId);
 
     if (game == null) {
+      log.info("Someone (" + playerId + ") attempts to make a move in a game that does not exist: " + gameId);
       return ResponseEntity.badRequest().body("The game does not exist");
     }
 
@@ -243,15 +249,18 @@ public class GameController {
 
     Optional<Player> optPlayer = game.getPlayers().stream().filter(player -> player.getUuid().equals(playerId)).findFirst();
     if (optPlayer.isEmpty()) {
+      log.info("Someone (" + playerId + ") attempts to make a move in a game that they are not attending: " + game);
       return ResponseEntity.badRequest().body("Player does not exist");
     }
     Player player = optPlayer.get();
 
     if (!game.getState().getStarted()) {
+      log.info(player + " attempts to make a move in a game that has not started yet: " + game);
       return ResponseEntity.badRequest().body("The game has not started yet because there are not enough players");
     }
 
     if (!game.getCurrentPlayer().equals(player)) {
+      log.debug(player + " attempts to make a move although it is not their turn in the game: " + game);
       return ResponseEntity.badRequest().body("It is not your turn");
     }
 
@@ -259,6 +268,7 @@ public class GameController {
 
     if (direction != null) { // direction == null => skipping move
       if (!player.getDirections().contains(direction)) {
+        log.debug(player + " attempts to make a move but is not allowed to go " + actionStr + " in the game: " + game);
         return ResponseEntity.badRequest().body("You may not move in that direction");
       }
 
@@ -272,6 +282,7 @@ public class GameController {
       }
 
       if (game.getState().getOver()) {
+        log.info(player + " attempts to make a move in a game that is already over: " + game);
         return ResponseEntity.badRequest().body("Game over");
       }
 
@@ -307,8 +318,7 @@ public class GameController {
     deadGames
         .forEach(gameId -> games.remove(gameId));
 
-    if (!deadGames.isEmpty()) {
-      log.info("Killing " + deadGames.size() + " game(s)");
-    }
+    deadGames.forEach(game -> log.info("Killing game: " + game));
+
   }
 }

@@ -223,4 +223,9 @@ public class Game {
     LocalDateTime deadline = stayingAliveSince.plus(TIME_TO_LIVE);
     return LocalDateTime.now().isAfter(deadline);
   }
+
+  @Transient
+  public String toString() {
+    return name != null && !name.isEmpty() ? name + "/" + uuid : uuid.toString();
+  }
 }

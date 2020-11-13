@@ -1,5 +1,6 @@
 package de.unikassel.vs.comaze.model;
 
+import java.beans.Transient;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -39,5 +40,10 @@ public class Player {
 
   public void setLastAction(String lastAction) {
     this.lastAction = lastAction;
+  }
+
+  @Transient
+  public String toString() {
+    return name != null && !name.isEmpty() ? name + "/" + uuid : uuid.toString();
   }
 }

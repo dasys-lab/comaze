@@ -64,7 +64,7 @@ public class GameController {
           )
       }
   )
-  @GetMapping("/games/byPlayerName")
+  @GetMapping("/game/byPlayerName")
   public ResponseEntity<?> attendGame(
       @Parameter(description = "The name of a player that is already attending an open game")
       @RequestParam(value = "playerName")

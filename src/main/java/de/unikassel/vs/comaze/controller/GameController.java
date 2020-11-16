@@ -25,6 +25,66 @@ public class GameController {
   Logger log = LoggerFactory.getLogger(GameController.class);
 
   @Operation(
+      summary = "Get a list of games",
+      description = "Gets a list of games with their UUIDs, state and attending players.",
+      hidden = true,
+      responses = {
+          @ApiResponse(
+              responseCode = "200",
+              description = "A list of games",
+              content =
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = GameDTO.class)
+              )
+          )
+      }
+  )
+  @GetMapping("/gamesss")
+  public ResponseEntity<?> getGames() {
+    List<Object> games = this.games.values().stream()
+        .map(game -> new GameDTO(game))
+        .collect(Collectors.toList());
+    return ResponseEntity.ok(games);
+  }
+
+  @Operation(
+      summary = "Search a game by a player's name",
+      description = "Looks for an open game with the provided player waiting",
+      responses = {
+          @ApiResponse(
+              responseCode = "200",
+              description = "A game object",
+              content = {
+                  @Content(
+                      mediaType = "application/json",
+                      schema = @Schema(implementation = Game.class)
+                  )
+              }
+          )
+      }
+  )
+  @GetMapping("/games/byPlayerName")
+  public ResponseEntity<?> attendGame(
+      @Parameter(description = "The name of a player that is already attending an open game")
+      @RequestParam(value = "playerName")
+          String playerName
+  ) {
+    Optional<Game> game = games.values().stream()
+        .filter(gameValue -> !gameValue.getState().getStarted())
+        .filter(gameValue -> gameValue.getPlayers().stream()
+            .anyMatch(player -> player.getName().equals(playerName))
+        )
+        .max(Comparator.comparing(Game::getStayingAliveSince));
+
+    if (game.isEmpty()) {
+      return ResponseEntity.badRequest().body("No such game exists");
+    } else {
+      return ResponseEntity.ok(game.get());
+    }
+  }
+
+  @Operation(
       summary = "Get a game",
       description = "Gets a game object representing its configuration and current state.",
       responses = {

@@ -214,6 +214,11 @@ public class Game {
     return numOfPlayerSlots;
   }
 
+  @Transient
+  public LocalDateTime getStayingAliveSince() {
+    return stayingAliveSince;
+  }
+
   public void stayAlive() {
     this.stayingAliveSince = LocalDateTime.now();
   }

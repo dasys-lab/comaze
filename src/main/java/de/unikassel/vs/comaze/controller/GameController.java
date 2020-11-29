@@ -43,7 +43,7 @@ public class GameController {
   @GetMapping("/gamesss")
   public ResponseEntity<?> getGames() {
     List<Object> games = this.games.values().stream()
-        .map(game -> new GameDTO(game))
+        .map(GameDTO::new)
         .collect(Collectors.toList());
     return ResponseEntity.ok(games);
   }

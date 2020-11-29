@@ -1,7 +1,6 @@
 package de.unikassel.vs.comaze.model;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class GameConfig {
   private final Int2D arenaSize;
@@ -19,6 +18,12 @@ public class GameConfig {
   GameConfig(Int2D arenaSize, Int2D agentStartPosition) {
     this.arenaSize = arenaSize;
     this.agentStartPosition = agentStartPosition;
+  }
+
+  public List<SymbolMessage> getSymbolMessages() {
+    List<SymbolMessage> symbolMessages = Arrays.asList(SymbolMessage.values());
+    Collections.shuffle(symbolMessages);
+    return symbolMessages;
   }
 
   public void addWall(Int2D position, Direction direction) {

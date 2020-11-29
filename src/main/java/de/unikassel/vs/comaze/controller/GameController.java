@@ -296,7 +296,13 @@ public class GameController {
           }
       )
       @RequestParam("action")
-          String actionStr
+          String actionStr,
+
+      @Parameter(
+          description = "Send a single symbol out of a pre-defined set as a message that can be seen and interpreted by other players"
+      )
+      @RequestParam(value = "symbolMessage", required = false)
+          SymbolMessage symbolMessage
   ) {
     Game game = games.get(gameId);
 
@@ -365,6 +371,7 @@ public class GameController {
           });
     }
     player.setLastAction(direction != null ? direction.name() : Direction.SKIP);
+    player.setLastSymbolMessage(symbolMessage);
     game.setNextPlayer();
 
     return ResponseEntity.ok().body(game);

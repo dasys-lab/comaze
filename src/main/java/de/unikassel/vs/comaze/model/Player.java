@@ -11,6 +11,7 @@ public class Player {
   private final UUID uuid = UUID.randomUUID();
   private final Set<Direction> directions = new HashSet<>();
   private String lastAction;
+  private SymbolMessage lastSymbolMessage;
 
   public Player(String name) {
     this.name = name;
@@ -40,6 +41,14 @@ public class Player {
 
   public void setLastAction(String lastAction) {
     this.lastAction = lastAction;
+  }
+
+  public SymbolMessage getLastSymbolMessage() {
+    return lastSymbolMessage;
+  }
+
+  public void setLastSymbolMessage(SymbolMessage lastSymbolMessage) {
+    this.lastSymbolMessage = lastSymbolMessage;
   }
 
   @Transient

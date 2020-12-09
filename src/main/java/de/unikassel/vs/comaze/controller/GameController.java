@@ -161,7 +161,7 @@ public class GameController {
       responses = {
           @ApiResponse(
               responseCode = "200",
-              description = "The newly created player object",
+              description = "The newly created player object. If the game you attend has secret goal rules enabled, you receive the secret rule for your player within this response. You cannot request it later, so make sure to remember it.",
               content = {
                   @Content(
                       mediaType = "application/json",
@@ -239,17 +239,14 @@ public class GameController {
       player.getDirections().add(game.getUnassignedDirection(preferredDirections));
     }
 
-    log.info(player + " is attending the game: " + game);
-
     if (game.getConfig().isHasSecretGoalRules()) {
-      PlayerWithSecretGoalRule rulePlayer = new PlayerWithSecretGoalRule(player);
       SecretGoalRule rule = game.getUnassignedSecretGoalRule();
       rule.setPlayer(player);
-      rulePlayer.setSecretGoalRule(rule);
-      return ResponseEntity.ok(rulePlayer);
-    } else {
-      return ResponseEntity.ok(player);
+      player.setSecretGoalRule(rule);
     }
+
+    log.info(player + " is attending the game: " + game);
+    return ResponseEntity.ok(player);
   }
 
   @Operation(

@@ -1,5 +1,7 @@
 package de.unikassel.vs.comaze.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.beans.Transient;
 import java.util.HashSet;
 import java.util.Set;
@@ -12,6 +14,7 @@ public class Player {
   private final Set<Direction> directions = new HashSet<>();
   private String lastAction;
   private SymbolMessage lastSymbolMessage;
+  private SecretGoalRule secretGoalRule;
 
   public Player(String name) {
     this.name = name;
@@ -49,6 +52,15 @@ public class Player {
 
   public void setLastSymbolMessage(SymbolMessage lastSymbolMessage) {
     this.lastSymbolMessage = lastSymbolMessage;
+  }
+
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  public SecretGoalRule getSecretGoalRule() {
+    return secretGoalRule;
+  }
+
+  public void setSecretGoalRule(SecretGoalRule secretGoalRule) {
+    this.secretGoalRule = secretGoalRule;
   }
 
   @Transient

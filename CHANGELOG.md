@@ -4,7 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.4.0] - 2020-12-10
+### Added
+- The action rate of a game can be limited in order to watch AIs play
+
+### Changed
+- Added a move limit for levels 1 and 2
+- Merged Player classes, eliminating the need for a separate class with secret goal rules
 
 ## [1.2.0] - 2020-11-29
 ### Added

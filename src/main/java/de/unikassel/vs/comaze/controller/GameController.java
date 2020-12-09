@@ -141,14 +141,18 @@ public class GameController {
 
       @Parameter(description = "The amount of players needed to play the game")
       @RequestParam(value = "numOfPlayerSlots", required = false, defaultValue = "2")
-          int numOfPlayerSlots
+          int numOfPlayerSlots,
+
+      @Parameter(description = "Set a Limit for the game's action rate (e. g. if you want to watch AIs play)")
+      @RequestParam(required = false)
+          Double actionRateLimit
   ) {
     GameConfig config = GameConfigCreator.createLevel(level);
     if (config == null) {
       return ResponseEntity.badRequest().body("There is no such level");
     }
 
-    Game game = new Game(name, config, numOfPlayerSlots);
+    Game game = new Game(name, config, numOfPlayerSlots, actionRateLimit);
     game.stayAlive();
     games.put(game.getUuid(), game);
     log.info("Game created: " + game);
@@ -308,6 +312,7 @@ public class GameController {
       return ResponseEntity.badRequest().body("The game does not exist");
     }
 
+    game.waitForActionRateLimit();
     game.stayAlive();
 
     Optional<Player> optPlayer = game.getPlayers().stream().filter(player -> player.getUuid().equals(playerId)).findFirst();

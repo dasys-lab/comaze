@@ -23,8 +23,9 @@ public class Game {
 
   private LocalDateTime stayingAliveSince = LocalDateTime.now();
   private final static Duration TIME_TO_LIVE = Duration.ofMinutes(60);
+  private final Double actionRateLimit;
 
-  public Game(String name, GameConfig config, int numOfPlayerSlots) {
+  public Game(String name, GameConfig config, int numOfPlayerSlots, Double actionRateLimit) {
     this.name = name;
     this.config = config;
     this.numOfPlayerSlots = numOfPlayerSlots;
@@ -32,6 +33,7 @@ public class Game {
     this.agentPosition = config.getAgentStartPosition();
     this.unreachedGoals.addAll(config.getGoals());
     this.unusedBonusTimes.addAll(config.getBonusTimes());
+    this.actionRateLimit = actionRateLimit;
   }
 
   @Transient
@@ -232,5 +234,22 @@ public class Game {
   @Transient
   public String toString() {
     return name != null && !name.isEmpty() ? name + "/" + uuid : uuid.toString();
+  }
+
+  public void waitForActionRateLimit() {
+    if (actionRateLimit == null) {
+      return;
+    }
+
+    long msToWaitBetweenMoves = (long) (1000 / actionRateLimit);
+    LocalDateTime waitUntil = stayingAliveSince.plus(Duration.ofMillis(msToWaitBetweenMoves));
+    LocalDateTime now = LocalDateTime.now();
+    if (now.isBefore(waitUntil)) {
+      try {
+        Thread.sleep(Duration.between(now, waitUntil).toMillis());
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
+    }
   }
 }

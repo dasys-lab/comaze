@@ -355,7 +355,6 @@ public class GameController {
       }
 
       game.setAgentPosition(newPosition);
-      game.increaseUsedMoves();
 
       // strike goal if reached
       game.getUnreachedGoals().stream()
@@ -372,8 +371,10 @@ public class GameController {
             game.addBonusMoves(bonusTime.getAmount());
           });
     }
+
     player.setLastAction(direction != null ? direction.name() : Direction.SKIP);
     player.setLastSymbolMessage(symbolMessage);
+    game.increaseUsedMoves();
     game.setNextPlayer();
 
     return ResponseEntity.ok().body(game);

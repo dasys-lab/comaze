@@ -34,6 +34,118 @@ public class GameConfigCreator {
     return config;
   }
 
+  @SecretLevel
+  public static GameConfig createLevel2A() {
+    GameConfig config = createLevel1();
+    config.addWall(new Int2D(1, 2), Direction.RIGHT);
+    config.addWall(new Int2D(1, 4), Direction.RIGHT);
+    config.addWall(new Int2D(1, 5), Direction.RIGHT);
+    config.addWall(new Int2D(2, 2), Direction.DOWN);
+    config.addWall(new Int2D(3, 5), Direction.RIGHT);
+    config.addWall(new Int2D(3, 5), Direction.DOWN);
+    config.addWall(new Int2D(4, 4), Direction.RIGHT);
+    config.addWall(new Int2D(4, 4), Direction.DOWN);
+    return config;
+  }
+
+  @SecretLevel
+  public static GameConfig createLevel2B() {
+    GameConfig config = createLevel1();
+    config.addWall(new Int2D(1, 4), Direction.DOWN);
+    config.addWall(new Int2D(1, 4), Direction.RIGHT);
+    config.addWall(new Int2D(2, 3), Direction.DOWN);
+    config.addWall(new Int2D(2, 3), Direction.RIGHT);
+    config.addWall(new Int2D(3, 1), Direction.DOWN);
+    config.addWall(new Int2D(3, 2), Direction.RIGHT);
+    config.addWall(new Int2D(4, 4), Direction.DOWN);
+    config.addWall(new Int2D(5, 4), Direction.DOWN);
+    return config;
+  }
+
+  @SecretLevel
+  public static GameConfig createLevel2C() {
+    GameConfig config = createLevel1();
+    config.addWall(new Int2D(2, 1), Direction.DOWN);
+    config.addWall(new Int2D(1, 2), Direction.RIGHT);
+    config.addWall(new Int2D(3, 2), Direction.RIGHT);
+    config.addWall(new Int2D(4, 2), Direction.DOWN);
+    config.addWall(new Int2D(4, 3), Direction.RIGHT);
+    config.addWall(new Int2D(5, 3), Direction.DOWN);
+    config.addWall(new Int2D(2, 4), Direction.DOWN);
+    config.addWall(new Int2D(3, 4), Direction.DOWN);
+    return config;
+  }
+
+  @SecretLevel
+  public static GameConfig createLevel2D() {
+    GameConfig config = createLevel1();
+    config.addWall(new Int2D(3, 1), Direction.RIGHT);
+    config.addWall(new Int2D(4, 1), Direction.DOWN);
+    config.addWall(new Int2D(2, 3), Direction.RIGHT);
+    config.addWall(new Int2D(2, 4), Direction.RIGHT);
+    config.addWall(new Int2D(3, 5), Direction.RIGHT);
+    config.addWall(new Int2D(3, 5), Direction.DOWN);
+    config.addWall(new Int2D(4, 4), Direction.RIGHT);
+    config.addWall(new Int2D(4, 4), Direction.DOWN);
+    return config;
+  }
+
+  @SecretLevel
+  public static GameConfig createLevel2E() {
+    GameConfig config = createLevel1();
+    config.addWall(new Int2D(1, 3), Direction.RIGHT);
+    config.addWall(new Int2D(2, 2), Direction.RIGHT);
+    config.addWall(new Int2D(2, 2), Direction.DOWN);
+    config.addWall(new Int2D(3, 1), Direction.DOWN);
+    config.addWall(new Int2D(3, 3), Direction.RIGHT);
+    config.addWall(new Int2D(4, 3), Direction.DOWN);
+    config.addWall(new Int2D(4, 4), Direction.DOWN);
+    config.addWall(new Int2D(5, 4), Direction.DOWN);
+    return config;
+  }
+
+  @SecretLevel
+  public static GameConfig createLevel2F() {
+    GameConfig config = createLevel1();
+    config.addWall(new Int2D(2, 5), Direction.DOWN);
+    config.addWall(new Int2D(2, 5), Direction.RIGHT);
+    config.addWall(new Int2D(3, 1), Direction.RIGHT);
+    config.addWall(new Int2D(3, 2), Direction.RIGHT);
+    config.addWall(new Int2D(3, 4), Direction.RIGHT);
+    config.addWall(new Int2D(3, 4), Direction.DOWN);
+    config.addWall(new Int2D(4, 4), Direction.RIGHT);
+    config.addWall(new Int2D(5, 4), Direction.DOWN);
+    return config;
+  }
+
+  @SecretLevel
+  public static GameConfig createLevel2G() {
+    GameConfig config = createLevel1();
+    config.addWall(new Int2D(2, 1), Direction.DOWN);
+    config.addWall(new Int2D(1, 2), Direction.RIGHT);
+    config.addWall(new Int2D(2, 4), Direction.DOWN);
+    config.addWall(new Int2D(3, 4), Direction.DOWN);
+    config.addWall(new Int2D(4, 3), Direction.DOWN);
+    config.addWall(new Int2D(4, 3), Direction.RIGHT);
+    config.addWall(new Int2D(5, 2), Direction.DOWN);
+    config.addWall(new Int2D(5, 2), Direction.RIGHT);
+    return config;
+  }
+
+  @SecretLevel
+  public static GameConfig createLevel2H() {
+    GameConfig config = createLevel1();
+    config.addWall(new Int2D(2, 1), Direction.RIGHT);
+    config.addWall(new Int2D(2, 2), Direction.RIGHT);
+    config.addWall(new Int2D(2, 4), Direction.RIGHT);
+    config.addWall(new Int2D(2, 4), Direction.DOWN);
+    config.addWall(new Int2D(1, 5), Direction.RIGHT);
+    config.addWall(new Int2D(1, 5), Direction.DOWN);
+    config.addWall(new Int2D(3, 4), Direction.RIGHT);
+    config.addWall(new Int2D(4, 3), Direction.DOWN);
+    return config;
+  }
+
   public static GameConfig createLevel3() {
     GameConfig config = createLevel2();
     config.setInitialMaxMoves(INITIAL_MAX_MOVES_LEVEL_3);
@@ -58,6 +170,7 @@ public class GameConfigCreator {
 
   public static List<String> getLevels() {
     return Arrays.stream(GameConfigCreator.class.getMethods())
+        .filter(method -> !method.isAnnotationPresent(SecretLevel.class))
         .map(Method::getName)
         .filter(method -> method.startsWith("createLevel"))
         .map(method -> method.replace("createLevel", ""))

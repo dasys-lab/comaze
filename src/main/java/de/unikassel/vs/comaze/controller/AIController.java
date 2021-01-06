@@ -51,17 +51,17 @@ public class AIController {
 
     ProcessBuilder processBuilder;
     switch (ai) {
-      case "Die-Ratten":
+      case "Die_Ratten":
         processBuilder = new ProcessBuilder(python, Paths.get(extractedPath).resolve("main.py").toFile().getAbsolutePath(), gameId.toString());
         break;
-      case "Team-DGL":
+      case "Team_DGL":
         processBuilder = new ProcessBuilder(python, Paths.get(extractedPath).resolve("main.py").toFile().getAbsolutePath(), "-j", "-i", gameId.toString());
         break;
-      case "Fantastic-3-4":
-        processBuilder = new ProcessBuilder(python, Paths.get(extractedPath).resolve("CustomCoMaze.py").toFile().getAbsolutePath(), "--gameid", gameId.toString());
+      case "Fantastic_3_4":
+        processBuilder = new ProcessBuilder(python, Paths.get(extractedPath).resolve("Main.py").toFile().getAbsolutePath(), "--gameId", gameId.toString());
         break;
-      case "Team-Knusprig":
-        processBuilder = new ProcessBuilder(python, Paths.get(extractedPath).resolve("teamwork-main").resolve("main.py").toFile().getAbsolutePath(), gameId.toString());
+      case "Team_Knusprig":
+        processBuilder = new ProcessBuilder(python, Paths.get(extractedPath).resolve("teamwork").resolve("main.py").toFile().getAbsolutePath(), gameId.toString());
         break;
       default:
         throw new IllegalArgumentException("Unable to launch AI " + ai);
@@ -79,7 +79,7 @@ public class AIController {
         .filter(path -> path.toString().endsWith(".zip"))
         .map(path -> {
           String fileName = path.getFileName().toString();
-          String[] split = fileName.split("\\.");
+          String[] split = fileName.split("-");
           return split[1];
         })
         .collect(Collectors.toList());

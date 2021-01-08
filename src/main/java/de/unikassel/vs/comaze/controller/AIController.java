@@ -68,6 +68,7 @@ public class AIController {
     }
 
     log.info("Launching AI " + ai);
+    processBuilder.inheritIO();
     Process process = processBuilder.start();
     process.waitFor();
     log.info("AI " + ai + " terminated: " + process.exitValue());

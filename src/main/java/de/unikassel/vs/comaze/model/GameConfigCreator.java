@@ -34,115 +34,89 @@ public class GameConfigCreator {
     return config;
   }
 
-  @SecretLevel
-  public static GameConfig createLevel2A() {
+  public static GameConfig createLevel2R() {
     GameConfig config = createLevel1();
-    config.addWall(new Int2D(1, 2), Direction.RIGHT);
-    config.addWall(new Int2D(1, 4), Direction.RIGHT);
-    config.addWall(new Int2D(1, 5), Direction.RIGHT);
-    config.addWall(new Int2D(2, 2), Direction.DOWN);
-    config.addWall(new Int2D(3, 5), Direction.RIGHT);
-    config.addWall(new Int2D(3, 5), Direction.DOWN);
-    config.addWall(new Int2D(4, 4), Direction.RIGHT);
-    config.addWall(new Int2D(4, 4), Direction.DOWN);
-    return config;
-  }
-
-  @SecretLevel
-  public static GameConfig createLevel2B() {
-    GameConfig config = createLevel1();
-    config.addWall(new Int2D(1, 4), Direction.DOWN);
-    config.addWall(new Int2D(1, 4), Direction.RIGHT);
-    config.addWall(new Int2D(2, 3), Direction.DOWN);
-    config.addWall(new Int2D(2, 3), Direction.RIGHT);
-    config.addWall(new Int2D(3, 1), Direction.DOWN);
-    config.addWall(new Int2D(3, 2), Direction.RIGHT);
-    config.addWall(new Int2D(4, 4), Direction.DOWN);
-    config.addWall(new Int2D(5, 4), Direction.DOWN);
-    return config;
-  }
-
-  @SecretLevel
-  public static GameConfig createLevel2C() {
-    GameConfig config = createLevel1();
-    config.addWall(new Int2D(2, 1), Direction.DOWN);
-    config.addWall(new Int2D(1, 2), Direction.RIGHT);
-    config.addWall(new Int2D(3, 2), Direction.RIGHT);
-    config.addWall(new Int2D(4, 2), Direction.DOWN);
-    config.addWall(new Int2D(4, 3), Direction.RIGHT);
-    config.addWall(new Int2D(5, 3), Direction.DOWN);
-    config.addWall(new Int2D(2, 4), Direction.DOWN);
-    config.addWall(new Int2D(3, 4), Direction.DOWN);
-    return config;
-  }
-
-  @SecretLevel
-  public static GameConfig createLevel2D() {
-    GameConfig config = createLevel1();
-    config.addWall(new Int2D(3, 1), Direction.RIGHT);
-    config.addWall(new Int2D(4, 1), Direction.DOWN);
-    config.addWall(new Int2D(2, 3), Direction.RIGHT);
-    config.addWall(new Int2D(2, 4), Direction.RIGHT);
-    config.addWall(new Int2D(3, 5), Direction.RIGHT);
-    config.addWall(new Int2D(3, 5), Direction.DOWN);
-    config.addWall(new Int2D(4, 4), Direction.RIGHT);
-    config.addWall(new Int2D(4, 4), Direction.DOWN);
-    return config;
-  }
-
-  @SecretLevel
-  public static GameConfig createLevel2E() {
-    GameConfig config = createLevel1();
-    config.addWall(new Int2D(1, 3), Direction.RIGHT);
-    config.addWall(new Int2D(2, 2), Direction.RIGHT);
-    config.addWall(new Int2D(2, 2), Direction.DOWN);
-    config.addWall(new Int2D(3, 1), Direction.DOWN);
-    config.addWall(new Int2D(3, 3), Direction.RIGHT);
-    config.addWall(new Int2D(4, 3), Direction.DOWN);
-    config.addWall(new Int2D(4, 4), Direction.DOWN);
-    config.addWall(new Int2D(5, 4), Direction.DOWN);
-    return config;
-  }
-
-  @SecretLevel
-  public static GameConfig createLevel2F() {
-    GameConfig config = createLevel1();
-    config.addWall(new Int2D(2, 5), Direction.DOWN);
-    config.addWall(new Int2D(2, 5), Direction.RIGHT);
-    config.addWall(new Int2D(3, 1), Direction.RIGHT);
-    config.addWall(new Int2D(3, 2), Direction.RIGHT);
-    config.addWall(new Int2D(3, 4), Direction.RIGHT);
-    config.addWall(new Int2D(3, 4), Direction.DOWN);
-    config.addWall(new Int2D(4, 4), Direction.RIGHT);
-    config.addWall(new Int2D(5, 4), Direction.DOWN);
-    return config;
-  }
-
-  @SecretLevel
-  public static GameConfig createLevel2G() {
-    GameConfig config = createLevel1();
-    config.addWall(new Int2D(2, 1), Direction.DOWN);
-    config.addWall(new Int2D(1, 2), Direction.RIGHT);
-    config.addWall(new Int2D(2, 4), Direction.DOWN);
-    config.addWall(new Int2D(3, 4), Direction.DOWN);
-    config.addWall(new Int2D(4, 3), Direction.DOWN);
-    config.addWall(new Int2D(4, 3), Direction.RIGHT);
-    config.addWall(new Int2D(5, 2), Direction.DOWN);
-    config.addWall(new Int2D(5, 2), Direction.RIGHT);
-    return config;
-  }
-
-  @SecretLevel
-  public static GameConfig createLevel2H() {
-    GameConfig config = createLevel1();
-    config.addWall(new Int2D(2, 1), Direction.RIGHT);
-    config.addWall(new Int2D(2, 2), Direction.RIGHT);
-    config.addWall(new Int2D(2, 4), Direction.RIGHT);
-    config.addWall(new Int2D(2, 4), Direction.DOWN);
-    config.addWall(new Int2D(1, 5), Direction.RIGHT);
-    config.addWall(new Int2D(1, 5), Direction.DOWN);
-    config.addWall(new Int2D(3, 4), Direction.RIGHT);
-    config.addWall(new Int2D(4, 3), Direction.DOWN);
+    switch ((int) (Math.random() * 8)) {
+      case 0:
+        config.addWall(new Int2D(1, 2), Direction.RIGHT);
+        config.addWall(new Int2D(1, 4), Direction.RIGHT);
+        config.addWall(new Int2D(1, 5), Direction.RIGHT);
+        config.addWall(new Int2D(2, 2), Direction.DOWN);
+        config.addWall(new Int2D(3, 5), Direction.RIGHT);
+        config.addWall(new Int2D(3, 5), Direction.DOWN);
+        config.addWall(new Int2D(4, 4), Direction.RIGHT);
+        config.addWall(new Int2D(4, 4), Direction.DOWN);
+        break;
+      case 1:
+        config.addWall(new Int2D(1, 4), Direction.DOWN);
+        config.addWall(new Int2D(1, 4), Direction.RIGHT);
+        config.addWall(new Int2D(2, 3), Direction.DOWN);
+        config.addWall(new Int2D(2, 3), Direction.RIGHT);
+        config.addWall(new Int2D(3, 1), Direction.DOWN);
+        config.addWall(new Int2D(3, 2), Direction.RIGHT);
+        config.addWall(new Int2D(4, 4), Direction.DOWN);
+        config.addWall(new Int2D(5, 4), Direction.DOWN);
+        break;
+      case 2:
+        config.addWall(new Int2D(2, 1), Direction.DOWN);
+        config.addWall(new Int2D(1, 2), Direction.RIGHT);
+        config.addWall(new Int2D(3, 2), Direction.RIGHT);
+        config.addWall(new Int2D(4, 2), Direction.DOWN);
+        config.addWall(new Int2D(4, 3), Direction.RIGHT);
+        config.addWall(new Int2D(5, 3), Direction.DOWN);
+        config.addWall(new Int2D(2, 4), Direction.DOWN);
+        config.addWall(new Int2D(3, 4), Direction.DOWN);
+        break;
+      case 3:
+        config.addWall(new Int2D(3, 1), Direction.RIGHT);
+        config.addWall(new Int2D(4, 1), Direction.DOWN);
+        config.addWall(new Int2D(2, 3), Direction.RIGHT);
+        config.addWall(new Int2D(2, 4), Direction.RIGHT);
+        config.addWall(new Int2D(3, 5), Direction.RIGHT);
+        config.addWall(new Int2D(3, 5), Direction.DOWN);
+        config.addWall(new Int2D(4, 4), Direction.RIGHT);
+        config.addWall(new Int2D(4, 4), Direction.DOWN);
+        break;
+      case 4:
+        config.addWall(new Int2D(1, 3), Direction.RIGHT);
+        config.addWall(new Int2D(2, 2), Direction.RIGHT);
+        config.addWall(new Int2D(2, 2), Direction.DOWN);
+        config.addWall(new Int2D(3, 1), Direction.DOWN);
+        config.addWall(new Int2D(3, 3), Direction.RIGHT);
+        config.addWall(new Int2D(4, 3), Direction.DOWN);
+        config.addWall(new Int2D(4, 4), Direction.DOWN);
+        config.addWall(new Int2D(5, 4), Direction.DOWN);
+        break;
+      case 5:
+        config.addWall(new Int2D(2, 5), Direction.DOWN);
+        config.addWall(new Int2D(2, 5), Direction.RIGHT);
+        config.addWall(new Int2D(3, 1), Direction.RIGHT);
+        config.addWall(new Int2D(3, 2), Direction.RIGHT);
+        config.addWall(new Int2D(3, 4), Direction.RIGHT);
+        config.addWall(new Int2D(3, 4), Direction.DOWN);
+        config.addWall(new Int2D(4, 4), Direction.RIGHT);
+        config.addWall(new Int2D(5, 4), Direction.DOWN);
+        break;
+      case 6:
+        config.addWall(new Int2D(2, 1), Direction.DOWN);
+        config.addWall(new Int2D(1, 2), Direction.RIGHT);
+        config.addWall(new Int2D(2, 4), Direction.DOWN);
+        config.addWall(new Int2D(3, 4), Direction.DOWN);
+        config.addWall(new Int2D(4, 3), Direction.DOWN);
+        config.addWall(new Int2D(4, 3), Direction.RIGHT);
+        config.addWall(new Int2D(5, 2), Direction.DOWN);
+        config.addWall(new Int2D(5, 2), Direction.RIGHT);
+        break;
+      case 7:
+        config.addWall(new Int2D(2, 1), Direction.RIGHT);
+        config.addWall(new Int2D(2, 2), Direction.RIGHT);
+        config.addWall(new Int2D(2, 4), Direction.RIGHT);
+        config.addWall(new Int2D(2, 4), Direction.DOWN);
+        config.addWall(new Int2D(1, 5), Direction.RIGHT);
+        config.addWall(new Int2D(1, 5), Direction.DOWN);
+        config.addWall(new Int2D(3, 4), Direction.RIGHT);
+        config.addWall(new Int2D(4, 3), Direction.DOWN);
+    }
     return config;
   }
 

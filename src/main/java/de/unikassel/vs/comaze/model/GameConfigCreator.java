@@ -23,20 +23,44 @@ public class GameConfigCreator {
 
   public static GameConfig createLevel2() {
     GameConfig config = createLevel1();
-    config.addWall(new Int2D(2, 2), Direction.RIGHT);
-    config.addWall(new Int2D(2, 4), Direction.RIGHT);
-    config.addWall(new Int2D(2, 5), Direction.RIGHT);
-    config.addWall(new Int2D(5, 2), Direction.RIGHT);
-    config.addWall(new Int2D(4, 3), Direction.RIGHT);
-    config.addWall(new Int2D(3, 2), Direction.DOWN);
-    config.addWall(new Int2D(5, 2), Direction.DOWN);
-    config.addWall(new Int2D(4, 3), Direction.DOWN);
+    addPseudoRandomWalls(config);
     return config;
   }
 
-  public static GameConfig createLevel2R() {
-    GameConfig config = createLevel1();
-    switch ((int) (Math.random() * 8)) {
+  public static GameConfig createLevel3() {
+    GameConfig config = createLevel2();
+    config.setInitialMaxMoves(INITIAL_MAX_MOVES_LEVEL_3);
+    config.addBonusTime(new Int2D(3, 0), AMOUNT_OF_BONUS_MOVES);
+    config.addBonusTime(new Int2D(3, 6), AMOUNT_OF_BONUS_MOVES);
+    return config;
+  }
+
+  public static GameConfig createLevel4() {
+    GameConfig config = createLevel3();
+    config.setHasSecretGoalRules(true);
+    return config;
+  }
+
+  public static GameConfig createLevel(String level) {
+    try {
+      return (GameConfig) GameConfigCreator.class.getMethod("createLevel" + level).invoke(null);
+    } catch (Exception e) {
+      return null;
+    }
+  }
+
+  public static List<String> getLevels() {
+    return Arrays.stream(GameConfigCreator.class.getMethods())
+        .filter(method -> !method.isAnnotationPresent(SecretLevel.class))
+        .map(Method::getName)
+        .filter(method -> method.startsWith("createLevel"))
+        .map(method -> method.replace("createLevel", ""))
+        .filter(method -> !method.isEmpty())
+        .collect(Collectors.toList());
+  }
+
+  private static void addPseudoRandomWalls(GameConfig config) {
+    switch ((int) (Math.random() * 9)) {
       case 0:
         config.addWall(new Int2D(1, 2), Direction.RIGHT);
         config.addWall(new Int2D(1, 4), Direction.RIGHT);
@@ -116,39 +140,17 @@ public class GameConfigCreator {
         config.addWall(new Int2D(1, 5), Direction.DOWN);
         config.addWall(new Int2D(3, 4), Direction.RIGHT);
         config.addWall(new Int2D(4, 3), Direction.DOWN);
+        break;
+      case 8:
+        config.addWall(new Int2D(2, 2), Direction.RIGHT);
+        config.addWall(new Int2D(2, 4), Direction.RIGHT);
+        config.addWall(new Int2D(2, 5), Direction.RIGHT);
+        config.addWall(new Int2D(5, 2), Direction.RIGHT);
+        config.addWall(new Int2D(4, 3), Direction.RIGHT);
+        config.addWall(new Int2D(3, 2), Direction.DOWN);
+        config.addWall(new Int2D(5, 2), Direction.DOWN);
+        config.addWall(new Int2D(4, 3), Direction.DOWN);
+        break;
     }
-    return config;
-  }
-
-  public static GameConfig createLevel3() {
-    GameConfig config = createLevel2();
-    config.setInitialMaxMoves(INITIAL_MAX_MOVES_LEVEL_3);
-    config.addBonusTime(new Int2D(3, 0), AMOUNT_OF_BONUS_MOVES);
-    config.addBonusTime(new Int2D(3, 6), AMOUNT_OF_BONUS_MOVES);
-    return config;
-  }
-
-  public static GameConfig createLevel4() {
-    GameConfig config = createLevel3();
-    config.setHasSecretGoalRules(true);
-    return config;
-  }
-
-  public static GameConfig createLevel(String level) {
-    try {
-      return (GameConfig) GameConfigCreator.class.getMethod("createLevel" + level).invoke(null);
-    } catch (Exception e) {
-      return null;
-    }
-  }
-
-  public static List<String> getLevels() {
-    return Arrays.stream(GameConfigCreator.class.getMethods())
-        .filter(method -> !method.isAnnotationPresent(SecretLevel.class))
-        .map(Method::getName)
-        .filter(method -> method.startsWith("createLevel"))
-        .map(method -> method.replace("createLevel", ""))
-        .filter(method -> !method.isEmpty())
-        .collect(Collectors.toList());
   }
 }

@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 public class GameConfigCreator {
   private final static int NUM_OF_FIELDS = 7;
   private final static int INITIAL_MAX_MOVES_BEFORE_LEVEL_3 = 100;
-  private final static int INITIAL_MAX_MOVES_LEVEL_3 = 30;
+  private final static int INITIAL_MAX_MOVES_LEVEL_3 = 20;
   private final static int AMOUNT_OF_BONUS_MOVES = 20;
 
   public static GameConfig createLevel1() {

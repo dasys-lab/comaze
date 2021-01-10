@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.5] - 2021-01-10
+### Changed
+- Change premade wall configurations to truly randomly generated ones
+
+### Fixed
+- Deploy script now waits for the server port to be free before restarting the server
+
 ## [1.5.4] - 2021-01-08
 ### Changed
 - Level 2 and higher: All wall configurations are now randomly selected

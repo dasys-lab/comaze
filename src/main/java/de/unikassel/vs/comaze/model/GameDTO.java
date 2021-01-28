@@ -10,14 +10,16 @@ public class GameDTO {
   private final UUID uuid;
   private final List<PlayerDTO> players = new ArrayList<>();
   private final int numOfPlayerSlots;
+  private final GameState state;
 
   public GameDTO(Game game) {
     this.uuid = game.getUuid();
     this.name = game.getName();
     this.numOfPlayerSlots = game.getNumOfPlayerSlots();
+    this.state = game.getState();
 
     List<PlayerDTO> playerList = game.getPlayers().stream()
-        .map(player -> new PlayerDTO(player))
+        .map(PlayerDTO::new)
         .collect(Collectors.toList());
     this.players.addAll(playerList);
   }
@@ -36,5 +38,9 @@ public class GameDTO {
 
   public int getNumOfPlayerSlots() {
     return numOfPlayerSlots;
+  }
+
+  public GameState getState() {
+    return state;
   }
 }

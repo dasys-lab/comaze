@@ -13,6 +13,7 @@ public class Player {
   private final UUID uuid = UUID.randomUUID();
   private final Set<Direction> directions = new HashSet<>();
   private String lastAction;
+  private String predictedAction;
   private SymbolMessage lastSymbolMessage;
   private SecretGoalRule secretGoalRule;
 
@@ -44,6 +45,14 @@ public class Player {
 
   public void setLastAction(String lastAction) {
     this.lastAction = lastAction;
+  }
+
+  public String getPredictedAction() {
+    return predictedAction;
+  }
+
+  public void setPredictedAction(String predictedAction) {
+    this.predictedAction = predictedAction;
   }
 
   public SymbolMessage getLastSymbolMessage() {

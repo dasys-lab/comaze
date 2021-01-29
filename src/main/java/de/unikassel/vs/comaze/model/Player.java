@@ -1,6 +1,7 @@
 package de.unikassel.vs.comaze.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.beans.Transient;
 import java.util.HashSet;
@@ -10,12 +11,13 @@ import java.util.stream.Collectors;
 
 public class Player {
   private final String name;
-  private final UUID uuid = UUID.randomUUID();
+  private UUID uuid = UUID.randomUUID();
   private final Set<Direction> directions = new HashSet<>();
   private String lastAction;
   private String predictedAction;
   private SymbolMessage lastSymbolMessage;
   private SecretGoalRule secretGoalRule;
+  private SecretGoalRule explicitSecretGoalRule;
 
   public Player(String name) {
     this.name = name;
@@ -33,6 +35,10 @@ public class Player {
 
   public UUID getUuid() {
     return uuid;
+  }
+
+  public void setUuid(UUID uuid) {
+    this.uuid = uuid;
   }
 
   public String getName() {
@@ -63,13 +69,35 @@ public class Player {
     this.lastSymbolMessage = lastSymbolMessage;
   }
 
-  @JsonInclude(JsonInclude.Include.NON_NULL)
+  @Transient
   public SecretGoalRule getSecretGoalRule() {
     return secretGoalRule;
   }
 
   public void setSecretGoalRule(SecretGoalRule secretGoalRule) {
     this.secretGoalRule = secretGoalRule;
+  }
+
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  @JsonProperty("secretGoalRule")
+  public SecretGoalRule getExplicitSecretGoalRule() {
+    return explicitSecretGoalRule;
+  }
+
+  public void setExplicitSecretGoalRule(SecretGoalRule explicitSecretGoalRule) {
+    this.explicitSecretGoalRule = explicitSecretGoalRule;
+  }
+
+  // clones the player and sets the otherwise unused explicitSecretGoalRule property. this way, the secret goal rule is only serialized when explicitly calling this method since the original secretGoalRule property is transient.
+  public Player withSecretGoalRule() {
+    Player player = new Player(name);
+    player.setUuid(uuid);
+    player.getDirections().addAll(directions);
+    player.setLastAction(lastAction);
+    player.setPredictedAction(predictedAction);
+    player.setLastSymbolMessage(lastSymbolMessage);
+    player.setExplicitSecretGoalRule(secretGoalRule);
+    return player;
   }
 
   @Transient

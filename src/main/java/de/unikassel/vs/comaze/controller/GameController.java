@@ -250,7 +250,7 @@ public class GameController {
     }
 
     log.info(player + " is attending the game: " + game);
-    return ResponseEntity.ok(player);
+    return ResponseEntity.ok(player.withSecretGoalRule());
   }
 
   @Operation(

@@ -10,7 +10,7 @@
   </parent>
   <groupId>de.unikassel.vs</groupId>
   <artifactId>comaze</artifactId>
-  <version>1.6.0</version>
+  <version>1.7.0</version>
   <name>CoMaze Game server</name>
   <description>Server for a cooperative maze game</description>
 

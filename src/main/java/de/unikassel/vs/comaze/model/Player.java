@@ -15,6 +15,7 @@ public class Player {
   private final Set<Direction> directions = new HashSet<>();
   private String lastAction;
   private String predictedAction;
+  private String predictedGoal;
   private SymbolMessage lastSymbolMessage;
   private SecretGoalRule secretGoalRule;
   private SecretGoalRule explicitSecretGoalRule;
@@ -59,6 +60,14 @@ public class Player {
 
   public void setPredictedAction(String predictedAction) {
     this.predictedAction = predictedAction;
+  }
+
+  public String getPredictedGoal() {
+    return predictedGoal;
+  }
+
+  public void setPredictedGoal(String predictedGoal) {
+    this.predictedGoal = predictedGoal;
   }
 
   public SymbolMessage getLastSymbolMessage() {

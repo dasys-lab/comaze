@@ -306,6 +306,12 @@ public class GameController {
           String predictedActionStr,
 
       @Parameter(
+          description = "The color of the goal you predict the other player to target next"
+      )
+      @RequestParam(value = "predictedGoal", required = false)
+          String predictedGoalStr,
+
+      @Parameter(
           description = "Send a single symbol out of a pre-defined set as a message that can be seen and interpreted by other players"
       )
       @RequestParam(value = "symbolMessage", required = false)
@@ -380,6 +386,7 @@ public class GameController {
 
     player.setLastAction(direction != null ? direction.name() : Direction.SKIP);
     player.setPredictedAction(predictedActionStr);
+    player.setPredictedGoal(predictedGoalStr);
     player.setLastSymbolMessage(symbolMessage);
     game.increaseUsedMoves();
     game.setNextPlayer();
